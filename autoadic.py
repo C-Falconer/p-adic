@@ -35,10 +35,10 @@ ax[0].axhline(32, color="yellow", linestyle="--")
 ax[0].axhline(64, color="red", linestyle="--")
 
 ax[1].plot(range(len(y1)), y1)
-ax[1].set_title("Finite Portion")
+ax[1].set_title("Infinite Portion")
 
 ax[2].plot(range(len(y2)), y2)
-ax[2].set_title("Infinite Portion")
+ax[2].set_title("Finite Portion")
 
 plt.suptitle(f"{p}-adic p/q lengths with combinations up to {top}\nwith a top multiplier of {multiplier}")
 plt.show()

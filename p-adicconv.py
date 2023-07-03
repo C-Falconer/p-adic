@@ -26,13 +26,22 @@ while not done:
         if abs(r - q*ki) % p == 0:
             ri = (r - q*ki) // p
             if not quiet: print(f"{r}/{q} = {ki} + {p}({ri}/{q})")
-            adic.append(ki)
+            adic.insert(0, ki)
             if ri in remainders:
                 adic.insert(remainders.index(ri) + 1, "_")
                 done = True
                 break
-            remainders.append(ri)
+            remainders.insert(0, ri)
             r = ri
             break
+while adic[0] == 0:
+    adic.pop(0)
+
+if len(adic) - len(adic[:adic.index("_")]) == 2 and adic[-1] == 0:
+    adic = adic[:-1]
+
+if len(adic[adic.index("_") + 1:]) == 1 and adic[adic.index("_") - 1] == adic[-1]:
+    adic.pop()
+
 if not quiet: print(adic, end=" ")
 print("{0}\tL:{1}\tR:{2}".format(len(adic) - 1, adic.index("_"), len(adic) - adic.index("_") - 1))

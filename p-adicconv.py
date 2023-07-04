@@ -34,13 +34,13 @@ while not done:
             remainders.insert(0, ri)
             r = ri
             break
-while adic[0] == 0:
-    adic.pop(0)
+#while adic[0] == 0:
+#    adic.pop(0)
 
-if len(adic) - len(adic[:adic.index("_")]) == 2 and adic[-1] == 0:
-    adic = adic[:-1]
+#if len(adic) - len(adic[:adic.index("_")]) == 2 and adic[-1] == 0:
+#    adic = adic[:-1]
 
-if len(adic[adic.index("_") + 1:]) == 1 and adic[adic.index("_") - 1] == adic[-1]:
+if len(adic) == 3 and adic[adic.index("_") - 1] == adic[-1]:
     adic.pop()
 
 if not quiet: print(adic, end=" ")

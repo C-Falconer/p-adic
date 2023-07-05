@@ -27,5 +27,5 @@ for i, result in enumerate(results):
     results_dict[f"{2*i + 1}/{top}"] = result.replace('1', "\033[91m1\033[00m")
 results_dict = dict(sorted(results_dict.items(), key = lambda x:x[1]))
 for key,values in results_dict.items():
-    print(sum(map(int, values.replace("\033[91m1\033[00m", "1")[:values.replace("\033[91m1\033[00m", "1").find("_")])), end=" ")
+    print(sum(map(int, values.replace("\033[91m1\033[00m", "1")[:values.replace("\033[91m1\033[00m", "1").find("_")])), end="\t")
     print(f"{key}\t{values}")

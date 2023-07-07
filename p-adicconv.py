@@ -1,7 +1,7 @@
 import sys
 
-r = -1
-q = 3
+r = 1
+q = 1
 p = 2
 quiet = False
 if len(sys.argv) > 1:

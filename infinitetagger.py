@@ -24,7 +24,6 @@ def swap(lis, amount):
 
 def isSameTag(tag1, tag2, quiet=True):
     tags = map(str, [tag1, tag2])
-    sizes = map(len, tags)
     shapes = [[], []]
     for i, tag in enumerate(tags):
         index = 0

@@ -22,13 +22,15 @@ def swap(lis, amount):
             old = old2
     return lis
 
-def isSameTag(tag1, tag2, quiet=True):
+def isSameTag(tag1, tag2, quiet=True, inverting=False):
     tags = map(str, [tag1, tag2])
     shapes = [[], []]
     for i, tag in enumerate(tags):
         index = 0
+        tag = str(tag)
+        tag = tag.replace("[", "").replace("]", "")
         one = tag[0] == "1"
-        if not quiet: print(tag)
+        if not quiet: print(tag, inverting)
         while tag.find(str(int(one)), index) != -1:
             shapes[i].append(str(int(one)) + str(tag.count(str(int(one)), index, tag.find(str(int(not one)), index))))
             one = not one
@@ -57,16 +59,30 @@ def C(n):
             returnlist.append((i, j))
     return returnlist
 
-def checkalltags(tags):
+def checkalltags(tags, inv=False):
     returnval = True
     for comb in C(len(tags)):
-        returnval = returnval and isSameTag(tags[comb[0]], tags[comb[1]])
+        comb_bool = isSameTag(tags[comb[0]], tags[comb[1]])
+        if inv:
+            comb_bool = comb_bool or isSameTag(invert(tags[comb[0]]), tags[comb[1]])
+        returnval = returnval and comb_bool
     return returnval
+
+def invert(tags):
+    invtags = []
+    if type(tags) is not list:
+        tags = [tags]
+    for a in tags:
+        a = str(a)
+        b = ""
+        for bit in a:
+            b += str(int(not bool(int(bit))))
+        invtags.append(b)
+    return invtags[0]
 
 if __name__ == '__main__':
     import matplotlib.pyplot as plt
-    y = []
-    y2 = []
+    x, x2, x3, y, y2, y3 = [], [], [], [], [], []
     last_m = -1
     for i in range(n + 1):
         m = 2*i + 1
@@ -75,22 +91,33 @@ if __name__ == '__main__':
         result = subprocess.run(['python', 'uptoadic.py', str(m)], stdout=subprocess.PIPE)
         result = str(result.stdout, 'utf-8').split("\n")
         tags = []
+        denom = -1
         for item in result[:-1]:
             item = item.split("\t")
             item[2] = color.color(color.decolor(item[2])[:-2])
             tags.append(color.decolor(item[2]))
+            denom = int(item[1].split("/")[1])
             if printing: [print(x, end="\t") for x in item]; print()
         if tags == []:
             continue
         alltagsequal = checkalltags(tags)
         if printing: print(alltagsequal, len(tags[0]))
         if alltagsequal:
+            x.append(denom)
             y.append(len(tags[0]))
         else:
-            y2.append(len(tags[0]))
+            inverttagequal = checkalltags(tags, True)
+            if printing: print(inverttagequal)
+            if inverttagequal:
+                x3.append(denom)
+                y3.append(len(tags[0]))
+            else:
+                x2.append(denom)
+                y2.append(len(tags[0]))
         last_m = m
-    plt.plot(y, label="Equal Tags")
-    plt.plot(y2, label="Non-Equal Tags")
+    plt.plot(x, y, label="Equal Tags", marker=".")
+    plt.plot(x2, y2, label="Non-Equal Tags", marker=".")
+    plt.plot(x3, y3, label="Invert Equal Tags", marker=".")
     plt.xlabel("Amount of Tags")
     plt.ylabel("Size of Tags")
     plt.title(f"Sizes of Infinite Portions (Tags) for Prime Denominators > 2\nup to {last_m}")

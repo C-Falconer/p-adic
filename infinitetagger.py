@@ -118,7 +118,7 @@ if __name__ == '__main__':
     plt.plot(x, y, label="Equal Tags", marker=".")
     plt.plot(x2, y2, label="Non-Equal Tags", marker=".")
     plt.plot(x3, y3, label="Invert Equal Tags", marker=".")
-    plt.xlabel("Amount of Tags")
+    plt.xlabel("Denominators")
     plt.ylabel("Size of Tags")
     plt.title(f"Sizes of Infinite Portions (Tags) for Prime Denominators > 2\nup to {last_m}")
     plt.axhline(16, ls="--", color="green")

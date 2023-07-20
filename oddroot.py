@@ -1,9 +1,8 @@
 import matplotlib.pyplot as plt
-import sys
+import sys, parameter
 
 n = 5
-if len(sys.argv) > 1:
-    n = int(sys.argv[1])
+n = parameter.handle(sys.argv, (n, True))
 
 y = []
 for i in range(1, n + 1):

@@ -1,11 +1,9 @@
-import color
-import prime
-import subprocess, sys, math
+import color, prime, parameter
+import subprocess, sys, math, time
 
 n = 5
+n = parameter.handle(sys.argv, (n, True))
 printing = True
-if len(sys.argv) > 1:
-    n = int(sys.argv[1])
 if len(sys.argv) > 2:
     printing = sys.argv[2] != "q"
 
@@ -68,24 +66,36 @@ def checkalltags(tags, inv=False):
         returnval = returnval and comb_bool
     return returnval
 
-def invert(tags):
+def invert(*tags):
     invtags = []
-    if type(tags) is not list:
-        tags = [tags]
     for a in tags:
         a = str(a)
         b = ""
         for bit in a:
             b += str(int(not bool(int(bit))))
         invtags.append(b)
-    return invtags[0]
+    if len(invtags) == 1:
+        return invtags[0]
+    return invtags
+
+def checkhalves(tags):
+    for tag in tags:
+        tag = str(tag)
+        if len(tag) % 2 != 0 or tag[len(tag)//2:] != invert(tag[:len(tag)//2]):
+            return False
+    return True
 
 if __name__ == '__main__':
     import matplotlib.pyplot as plt
     x, x2, x3, y, y2, y3 = [], [], [], [], [], []
     last_m = -1
+    if not printing: percent_complete, times, starttime = 10, [0], time.time()
     for i in range(n + 1):
         m = 2*i + 1
+        if not printing and 100 * i / n > percent_complete:
+            percent_complete += 10
+            times.append(time.time() - starttime)
+            print(f"{percent_complete - 10}% ({times[-1]:.2f})s...", end = " ", flush=True)
         if not prime.isprime(m):
             continue
         result = subprocess.run(['python', 'uptoadic.py', str(m)], stdout=subprocess.PIPE)
@@ -101,6 +111,9 @@ if __name__ == '__main__':
         if tags == []:
             continue
         alltagsequal = checkalltags(tags)
+        if alltagsequal and not checkhalves(tags):
+            print("Not halves but equal", tags)
+            break
         if printing: print(alltagsequal, len(tags[0]))
         if alltagsequal:
             x.append(denom)
@@ -115,6 +128,12 @@ if __name__ == '__main__':
                 x2.append(denom)
                 y2.append(len(tags[0]))
         last_m = m
+    if not printing:
+        times.append(time.time() - starttime); print(f"100% ({times[-1]:.2f})s")
+        plt.plot(range(0, 110, 10), times); plt.xlabel("Percents"); plt.ylabel("Time Taken");
+        plt.title("Time to run program"); plt.show()
+    y = [x//2 if x % 2 == 0 else x for x in y]
+    y3 = [x//2 if x % 2 == 0 else x for x in y3]
     plt.plot(x, y, label="Equal Tags", marker=".")
     plt.plot(x2, y2, label="Non-Equal Tags", marker=".")
     plt.plot(x3, y3, label="Invert Equal Tags", marker=".")

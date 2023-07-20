@@ -1,9 +1,8 @@
 import sys, os
-import prime
+import prime, parameter
 
 n = 5
-if len(sys.argv) > 1:
-    n = int(sys.argv[1])
+n = parameter.handle(sys.argv, (n, True))
 
 command = "clear"
 

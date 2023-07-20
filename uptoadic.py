@@ -1,12 +1,8 @@
-import sys, subprocess
+import sys, subprocess, parameter
 import color
 
-top = 5
-p = 2
-if len(sys.argv) > 1:
-    top = int(sys.argv[1])
-if len(sys.argv) > 2:
-    p = int(sys.argv[2])
+top, p = 5, 2
+top, p = parameter.handle(sys.argv, (top, True), (p, True))
 
 results = []
 for i in range(1, top):

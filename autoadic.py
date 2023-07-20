@@ -1,15 +1,10 @@
-import sys, subprocess
+import sys, subprocess, parameter
 import matplotlib.pyplot as plt
 from math import ceil
 
-top = 64
-p = 2
-multiplier = 1
+top, p, multiplier = 64, 2, 1
+top, p = parameter.handle(sys.argv, (top, True), (p, True))
 y, y1, y2 = [], [], []
-if len(sys.argv) > 1:
-    top = int(sys.argv[1])
-if len(sys.argv) > 2:
-    p = int(sys.argv[2])
 if len(sys.argv) > 3:
     if "." in sys.argv[3]:
         multiplier = float(sys.argv[3])

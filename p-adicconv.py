@@ -1,15 +1,8 @@
-import sys
+import sys, parameter
 
-r = 1
-q = 1
-p = 2
+r, q, p = 1, 1, 2
+r, q, p = parameter.handle(sys.argv, (r, True), (q, True), (p, True))
 quiet = False
-if len(sys.argv) > 1:
-    r = int(sys.argv[1])
-if len(sys.argv) > 2:
-    q = int(sys.argv[2])
-if len(sys.argv) > 3:
-    p = int(sys.argv[3])
 if len(sys.argv) > 4:
     quiet = sys.argv[4] == "q"
 

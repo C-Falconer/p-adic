@@ -1,8 +1,7 @@
 import color, prime, parameter
 import subprocess, sys, math, time
 
-n = 5
-n = parameter.handle(sys.argv, (n, True))
+n = parameter.handle(sys.argv, (5, True))
 printing = True
 halfmode = False
 if len(sys.argv) > 2:
@@ -45,13 +44,13 @@ def isSameTag(tag1, tag2, quiet=True, inverting=False):
     if not quiet: print(shapes[0], shapes[1])
     if len(shapes[0]) != len(shapes[1]):
         if not quiet: print("Skipping due to different lengths")
-        return False
+        return False, 0
     for i in range(len(shapes[0])):
         newshape = swap(shapes[0], 1)
         if not quiet: print(newshape)
         if newshape == shapes[1]:
-            return True
-    return False        
+            return True, i + 1
+    return False, 0        
 
 def C(n):
     returnlist = []
@@ -62,12 +61,14 @@ def C(n):
 
 def checkalltags(tags, inv=False):
     returnval = True
+    shifts_list = []
     for comb in C(len(tags)):
-        comb_bool = isSameTag(tags[comb[0]], tags[comb[1]])
+        comb_bool, shift = isSameTag(tags[comb[0]], tags[comb[1]])
+        shifts_list.append(shift)
         if inv:
             comb_bool = comb_bool or isSameTag(invert(tags[comb[0]]), tags[comb[1]])
         returnval = returnval and comb_bool
-    return returnval
+    return returnval, shifts_list
 
 def invert(*tags):
     invtags = []
@@ -113,12 +114,13 @@ if __name__ == '__main__':
             if printing: [print(x, end="\t") for x in item]; print()
         if tags == []:
             continue
-        alltagsequal = checkalltags(tags)
+        alltagsequal, shifts = checkalltags(tags)
         if alltagsequal and not checkhalves(tags):
             print("Not halves but equal", tags)
             break
         if printing: print(alltagsequal, len(tags[0]))
         if alltagsequal:
+            if printing: print(shifts)
             if halfmode: [print(denom, x) for x in tags]
             x.append(denom)
             y.append(len(tags[0]))

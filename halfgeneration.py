@@ -1,6 +1,7 @@
 import os, sys, subprocess
 import parameter
 from color import *
+import matplotlib.pyplot as plt
 
 n = parameter.handle(sys.argv, (10, True))
 
@@ -10,6 +11,7 @@ print(colors.UNDERLINE + "n\tTag Half" + colors.END, flush=True)
 last_denom = 0
 denoms = []
 converted_halves = []
+x, y = [], [0]
 for item in result:
     denom = item.split(" ")[0]
     tag = item.split(" ")[1]
@@ -21,9 +23,17 @@ for item in result:
     print(converted_halves[-1], end = "\t", flush=True)
     if denom == last_denom:
         dif = converted_halves[-1] - converted_halves[-2]
+        if y[-1] != dif: y.append(dif)
         print(dif, end="\t", flush=True)
         os.system("python3 binary.py " + str(dif))
     else:
+        x.append(denom)
         last_denom = denom
         print(flush=True)
+
+plt.plot(x, y, marker=".")
+plt.xlabel("Denominator")
+plt.ylabel("Tag Half Difference")
+plt.yscale("log", base=10)
+plt.show()
     

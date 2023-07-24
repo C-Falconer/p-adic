@@ -4,8 +4,11 @@ import subprocess, sys, math, time
 n = 5
 n = parameter.handle(sys.argv, (n, True))
 printing = True
+halfmode = False
 if len(sys.argv) > 2:
-    printing = sys.argv[2] != "q"
+    printing = sys.argv[2][0] != "q"
+    if len(sys.argv[2]) > 1:
+        halfmode = sys.argv[2][1] == "h"
 
 def swap(lis, amount):
     if amount == 0:
@@ -92,7 +95,7 @@ if __name__ == '__main__':
     if not printing: percent_complete, times, starttime = 10, [0], time.time()
     for i in range(n + 1):
         m = 2*i + 1
-        if not printing and 100 * i / n > percent_complete:
+        if not printing and 100 * i / n > percent_complete and not halfmode:
             percent_complete += 10
             times.append(time.time() - starttime)
             print(f"{percent_complete - 10}% ({times[-1]:.2f})s...", end = " ", flush=True)
@@ -116,6 +119,7 @@ if __name__ == '__main__':
             break
         if printing: print(alltagsequal, len(tags[0]))
         if alltagsequal:
+            if halfmode: [print(denom, x) for x in tags]
             x.append(denom)
             y.append(len(tags[0]))
         else:
@@ -128,6 +132,7 @@ if __name__ == '__main__':
                 x2.append(denom)
                 y2.append(len(tags[0]))
         last_m = m
+    if halfmode: sys.exit(0)
     if not printing:
         times.append(time.time() - starttime); print(f"100% ({times[-1]:.2f})s")
         plt.plot(range(0, 110, 10), times); plt.xlabel("Percents"); plt.ylabel("Time Taken");
